@@ -36,4 +36,11 @@ final class egex_swiftTests: XCTestCase {
         
         print("\(r)")
     }
+    
+    func testPartialAST() throws {
+        // TODO: Compose a regex with derivatives, flatten it, partialize it
+        let r: FlatRegexAST = .quantifier(.sequence("abc"), .zeroOrMore)
+        
+        print("\(partial(r))")
+    }
 }

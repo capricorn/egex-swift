@@ -106,21 +106,26 @@ func partialString(_ str: String) -> FlatRegexAST {
 }
 
 
-/*
 func partial(_ root: FlatRegexAST) -> FlatRegexAST {
     switch root {
     case .sequence(let string):
         if string.count > 1 {
-            
+            return partialString(string)
         } else {
             return root
         }
-    case .concat(let flatRegexAST, let flatRegexAST2):
-        <#code#>
-    case .union(let flatRegexAST, let flatRegexAST2):
-        <#code#>
-    case .quantifier(let flatRegexAST, let regexQuantifier):
-        <#code#>
+    case .concat(let e1, let e2):
+        return .concat(partial(e1), partial(e2))
+    case .union(let e1, let e2):
+        return .union(partial(e1), partial(e2))
+    case .quantifier(let e, let quantifier):
+        switch quantifier {
+        case .zeroOrOne:
+            return .quantifier(partial(e), .zeroOrOne)
+        case .zeroOrMore:
+            return .concat(.quantifier(e, .zeroOrMore), .quantifier(partial(e), .zeroOrOne))
+        case .oneOrMore:
+            return .concat(.quantifier(e, .zeroOrMore), partial(e))
+        }
     }
 }
-*/
