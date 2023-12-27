@@ -9,12 +9,25 @@ import Foundation
 
 // TODO: Match structure used by partial regex
 // (Regex derivatives are primitive -- don't fit this pattern as well)
-public indirect enum FlatRegexAST {
+public indirect enum FlatRegexAST: CustomStringConvertible {
     // A sequence of matchable regex characters
     case sequence(String)
     case concat(FlatRegexAST, FlatRegexAST)
     case union(FlatRegexAST, FlatRegexAST)
     case quantifier(FlatRegexAST, RegexQuantifier)
+    
+    public var description: String {
+        switch self {
+        case .sequence(let string):
+            return string
+        case .concat(let e1, let e2):
+            return "\(e1.description)\(e2.description)"
+        case .union(let e1, let e2):
+            return "\(e1.description)|\(e2.description)"
+        case .quantifier(let e, let quantifier):
+            return "(\(e.description))\(quantifier.description)"
+        }
+    }
 }
 
 /// Returns concat string and remaining AST node
