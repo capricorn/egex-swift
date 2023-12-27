@@ -2,11 +2,11 @@ import XCTest
 @testable import egex_swift
 
 final class egex_swiftTests: XCTestCase {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+    func testFlattenSequence() throws {
+        let r: RegexExpression = .concat(.symbol("a"), .concat(.symbol("b"), .symbol("c")))
+        let flattenedAST = flattenSequence(r)
+        
+        XCTAssert(flattenedAST.0 == "abc")
+        XCTAssert(flattenedAST.1 == nil)
     }
 }
