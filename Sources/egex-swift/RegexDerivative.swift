@@ -10,7 +10,7 @@ import Foundation
 /**
  Given an input takes its regex derivative wrt Character
  */
-typealias RegexDerivative = (String?) -> (String?, RegexExpression)
+public typealias RegexDerivative = (String?) -> (String?, RegexExpression)
 
 infix operator ..: NilCoalescingPrecedence
 infix operator |: MultiplicationPrecedence
@@ -19,12 +19,12 @@ postfix operator +
 postfix operator ~
 postfix operator <
 
-enum RegexQuantifier: CustomStringConvertible {
+public enum RegexQuantifier: CustomStringConvertible {
     case zeroOrOne
     case zeroOrMore
     case oneOrMore
     
-    var description: String {
+    public var description: String {
         switch self {
         case .zeroOrOne:
             return "?"
@@ -36,13 +36,13 @@ enum RegexQuantifier: CustomStringConvertible {
     }
 }
 
-indirect enum RegexExpression: CustomStringConvertible {
+public indirect enum RegexExpression: CustomStringConvertible {
     case concat(RegexExpression, RegexExpression)
     case union(RegexExpression, RegexExpression)
     case quantifier(RegexExpression, RegexQuantifier)
     case symbol(Character)
     
-    var description: String {
+    public var description: String {
         switch self {
         case .concat(let regexExpression, let regexExpression2):
             return regexExpression.description + regexExpression2.description
@@ -67,9 +67,9 @@ private func wildcard() -> RegexDerivative {
     }
 }
 
-let W = wildcard()
+public let W = wildcard()
 
-func D(_ symbol: Character) -> RegexDerivative {
+public func D(_ symbol: Character) -> RegexDerivative {
     return { input in
         guard let input else {
             return (nil, .symbol(symbol))
@@ -83,7 +83,7 @@ func D(_ symbol: Character) -> RegexDerivative {
     }
 }
 
-func .. (_ d1: @escaping RegexDerivative, _ d2: @escaping RegexDerivative) -> RegexDerivative {
+public func .. (_ d1: @escaping RegexDerivative, _ d2: @escaping RegexDerivative) -> RegexDerivative {
     return { input in
         // Fail early to terminate potential recursion
         guard let d1Match = d1(input).0 else {
@@ -94,13 +94,13 @@ func .. (_ d1: @escaping RegexDerivative, _ d2: @escaping RegexDerivative) -> Re
     }
 }
 
-func | (_ d1: @escaping RegexDerivative, _ d2: @escaping RegexDerivative) -> RegexDerivative {
+public func | (_ d1: @escaping RegexDerivative, _ d2: @escaping RegexDerivative) -> RegexDerivative {
     return { input in
         return (d1(input).0 ?? d2(input).0, .union(d1(nil).1, d2(nil).1))
     }
 }
 
-postfix func * (_ d: @escaping RegexDerivative) -> RegexDerivative {
+public postfix func * (_ d: @escaping RegexDerivative) -> RegexDerivative {
     return { input in
         var lastGoodInput = input
         while d(lastGoodInput).0 != nil {
@@ -111,7 +111,7 @@ postfix func * (_ d: @escaping RegexDerivative) -> RegexDerivative {
     }
 }
 
-postfix func + (_ d: @escaping RegexDerivative) -> RegexDerivative {
+public postfix func + (_ d: @escaping RegexDerivative) -> RegexDerivative {
     return { input in
         var lastGoodInput = d(input).0
         while d(lastGoodInput).0 != nil {
@@ -123,7 +123,7 @@ postfix func + (_ d: @escaping RegexDerivative) -> RegexDerivative {
 }
 
 // ?
-postfix func ~ (_ d: @escaping RegexDerivative) -> RegexDerivative {
+public postfix func ~ (_ d: @escaping RegexDerivative) -> RegexDerivative {
     return { input in
         return (d(input).0 ?? input, .quantifier(d("*").1, .zeroOrOne))
     }
