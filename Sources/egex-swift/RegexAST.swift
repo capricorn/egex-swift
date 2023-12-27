@@ -12,6 +12,9 @@ import Foundation
 public indirect enum FlatRegexAST {
     // A sequence of matchable regex characters
     case sequence(String)
+    case concat(FlatRegexAST, FlatRegexAST)
+    case union(FlatRegexAST, FlatRegexAST)
+    case quantifier(FlatRegexAST, RegexQuantifier)
 }
 
 /// Returns concat string and remaining AST node
@@ -36,24 +39,31 @@ func flattenSequence(_ root: RegexExpression) -> (String, RegexExpression?) {
     }
 }
 
-/*
 func flatten(_ root: RegexExpression) -> FlatRegexAST {
     switch root {
+    // TODO: Is this missing a case
+    // e2 could be a char sequence
     case .concat(let e1, let e2):
         if case .symbol(let character) = e1 {
             // TODO: Implement flatten sequence here
-            return flattenSequence(e1)
+            let flat = flattenSequence(root)
+            if let nextNode = flat.1 {
+                return .concat(.sequence(flat.0), flatten(nextNode))
+            } else {
+                return .sequence(flat.0)
+            }
         }
+        
+        return .concat(flatten(e1), flatten(e2))
     case .union(let e1, let e2):
-        // TODO
-        break
-    case .quantifier(let regexExpression, let regexQuantifier):
-        <#code#>
+        return .union(flatten(e1), flatten(e2))
+    case .quantifier(let e1, let e2):
+        return .quantifier(flatten(e1), e2)
     case .symbol(let character):
-        <#code#>
+        // TODO: Not sure one this
+        return .sequence(String(character))
     }
 }
- */
  
 /*
 extension RegexExpression {
