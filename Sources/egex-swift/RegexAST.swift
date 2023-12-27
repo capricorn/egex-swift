@@ -86,3 +86,41 @@ extension RegexExpression {
     }
 }
 */
+
+extension String {
+    var substrings: [String] {
+        (1...self.count).map {
+            String(self.prefix($0))
+        }
+    }
+}
+
+func partialString(_ str: String) -> FlatRegexAST {
+    var strings = str.substrings
+    let initial = strings.removeFirst()
+    
+    let ast: FlatRegexAST = strings.reduce(.sequence(initial), { (acc, curr) -> FlatRegexAST in .union(.sequence(curr), acc)
+    })
+    
+    return ast
+}
+
+
+/*
+func partial(_ root: FlatRegexAST) -> FlatRegexAST {
+    switch root {
+    case .sequence(let string):
+        if string.count > 1 {
+            
+        } else {
+            return root
+        }
+    case .concat(let flatRegexAST, let flatRegexAST2):
+        <#code#>
+    case .union(let flatRegexAST, let flatRegexAST2):
+        <#code#>
+    case .quantifier(let flatRegexAST, let regexQuantifier):
+        <#code#>
+    }
+}
+*/

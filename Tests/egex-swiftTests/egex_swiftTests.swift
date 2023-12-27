@@ -30,4 +30,10 @@ final class egex_swiftTests: XCTestCase {
         print("\(flattenedAST)")
         // TODO: Assertion
     }
+    
+    func testPartialString() throws {
+        let r = partialString("abc")
+        
+        print("\(r)")
+    }
 }
