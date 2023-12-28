@@ -89,6 +89,12 @@ public func D(_ symbol: Character) -> RegexDerivative {
     }
 }
 
+public func A(_ derivative: @escaping RegexDerivative) -> RegexDerivative {
+    { input in
+        derivative(String(phi) + (input ?? ""))
+    }
+}
+
 public func .. (_ d1: @escaping RegexDerivative, _ d2: @escaping RegexDerivative) -> RegexDerivative {
     return { input in
         // Fail early to terminate potential recursion

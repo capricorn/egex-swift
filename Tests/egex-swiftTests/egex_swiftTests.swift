@@ -47,10 +47,8 @@ final class egex_swiftTests: XCTestCase {
     func testPhiMatch() throws {
         let d = D("a") .. D("b") .. D("c")
         
-        // An example of isolating derivatives after composition
-        let matcher = { (input: String) in
-            d(String(phi) + input)
-        }
+        // Take the 'anti-derivative' of d
+        let matcher = A(d)
         
         XCTAssert(matcher("abc").0 == nil)
         XCTAssert(matcher("bc").0 == "")
