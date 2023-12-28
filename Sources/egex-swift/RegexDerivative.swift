@@ -68,6 +68,12 @@ private func wildcard() -> RegexDerivative {
 }
 
 public let W = wildcard()
+// TODO: Need to support special symbols
+// A special match character that derivatives _always_ match on
+// That is, an input character that is _always_ consumed.
+// Special in that it totally consumes quantifiers too.
+// TODO: Handle in derivative quantifiers
+public let phi: Character = "~"
 
 public func D(_ symbol: Character) -> RegexDerivative {
     return { input in
@@ -75,7 +81,7 @@ public func D(_ symbol: Character) -> RegexDerivative {
             return (nil, .symbol(symbol))
         }
         
-        if input.first == symbol {
+        if input.first == phi || input.first == symbol {
             return (String(input.dropFirst()), .symbol(symbol))
         }
         
@@ -128,3 +134,4 @@ public postfix func ~ (_ d: @escaping RegexDerivative) -> RegexDerivative {
         return (d(input).0 ?? input, .quantifier(d("*").1, .zeroOrOne))
     }
 }
+

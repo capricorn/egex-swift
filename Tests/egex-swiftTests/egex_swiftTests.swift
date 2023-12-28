@@ -43,4 +43,16 @@ final class egex_swiftTests: XCTestCase {
         
         print("\(partial(r))")
     }
+    
+    func testPhiMatch() throws {
+        let d = D("a") .. D("b") .. D("c")
+        
+        // An example of isolating derivatives after composition
+        let matcher = { (input: String) in
+            d(String(phi) + input)
+        }
+        
+        XCTAssert(matcher("abc").0 == nil)
+        XCTAssert(matcher("bc").0 == "")
+    }
 }
