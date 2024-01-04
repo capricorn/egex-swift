@@ -23,7 +23,7 @@ There are also the standard quantification operators:
 
 ```swift
 (D("a")*)("aaaa") == ""
-(D("x")~)("abc") == "abc
+(D("x")~)("abc") == "abc"
 ```
 
 Alongside alternation:
