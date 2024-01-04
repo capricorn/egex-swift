@@ -16,7 +16,7 @@ D("a")("xyz").0 == nil
 Derivatives compose:
 
 ```swift
-(D("a") .. D("b"))("abc).0 == "c"
+(D("a") .. D("b"))("abc").0 == "c"
 ```
 
 There are also the standard quantification operators:
